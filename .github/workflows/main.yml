@@ -1,0 +1,59 @@
+name: build and push to quay.io
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+env:
+  TAGS: "nightly"
+
+jobs:
+  build-postgres:
+    env:
+      image_name: cos-connector-debezium-postgres
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          path: postgres
+      - name: Debezium postgres
+        uses: docker/build-push-action@v1
+        with:
+          registry: ${{ secrets.REGISTRY_SERVER }}
+          repository: ${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+          tags: ${{ env.TAGS }}
+  build-mongodb:
+    env:
+      image_name: cos-connector-debezium-mongodb
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          path: mongodb
+      - name: Debezium mongodb
+        uses: docker/build-push-action@v1
+        with:
+          registry: ${{ secrets.REGISTRY_SERVER }}
+          repository: ${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+          tags: ${{ env.TAGS }}
+  build-mysql:
+    env:
+      image_name: cos-connector-debezium-mysql
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/checkout@master
+        with:
+          path: mongodb      
+      - name: Debezium mysql
+        uses: docker/build-push-action@v1
+        with:
+          registry: ${{ secrets.REGISTRY_SERVER }}
+          repository: ${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+          tags: ${{ env.TAGS }}
