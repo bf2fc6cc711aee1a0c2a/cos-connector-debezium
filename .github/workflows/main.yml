@@ -6,8 +6,8 @@ on:
     branches: [ main ]
 env:
   DEBEZIUM_VERSION: nightly
-  STRIMZI_VERSION: 0.26.0
-  KAFKA_VERSION: 2.8.1
+  STRIMZI_VERSION: latest
+  KAFKA_VERSION: 3.0.0
 
 jobs:
   build-postgres:
