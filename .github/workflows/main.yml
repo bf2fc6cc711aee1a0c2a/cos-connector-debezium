@@ -5,7 +5,9 @@ on:
   pull_request:
     branches: [ main ]
 env:
-  TAGS: "nightly"
+  DEBEZIUM_VERSION: nightly
+  STRIMZI_VERSION: 0.26.0
+  KAFKA_VERSION: 2.8.1
 
 jobs:
   build-postgres:
@@ -26,9 +28,10 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
+          build-args: DEBEZIUM_VERSION=${{ env.DEBEZIUM_VERSION }},STRIMZI_VERSION=${{ env.STRIMZI_VERSION }},KAFKA_VERSION=${{ env.KAFKA_VERSION }}
           context: postgres
           file: postgres/Dockerfile
-          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}:${{ env.TAGS }}
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}:${{ env.DEBEZIUM_VERSION }}
           secrets: |
             "registry=${{ secrets.REGISTRY_SERVER }}"
             "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}"
@@ -53,9 +56,10 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
+          build-args: DEBEZIUM_VERSION=${{ env.DEBEZIUM_VERSION }},STRIMZI_VERSION=${{ env.STRIMZI_VERSION }},KAFKA_VERSION=${{ env.KAFKA_VERSION }}
           context: mongodb
           file: mongodb/Dockerfile
-          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}:${{ env.TAGS }}
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}:${{ env.DEBEZIUM_VERSION }}
           secrets: |
             "registry=${{ secrets.REGISTRY_SERVER }}"
             "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}"
@@ -80,9 +84,10 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
+          build-args: DEBEZIUM_VERSION=${{ env.DEBEZIUM_VERSION }},STRIMZI_VERSION=${{ env.STRIMZI_VERSION }},KAFKA_VERSION=${{ env.KAFKA_VERSION }}
           context: mysql
           file: mysql/Dockerfile
-          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}:${{ env.TAGS }}
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}:${{ env.DEBEZIUM_VERSION }}
           secrets: |
             "registry=${{ secrets.REGISTRY_SERVER }}"
             "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}"
