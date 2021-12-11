@@ -14,46 +14,77 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+
+      - name: Login to Quay
+        uses: docker/login-action@v1
         with:
-          path: postgres
-      - name: Debezium postgres
-        uses: docker/build-push-action@v1
-        with:
-          registry: ${{ secrets.REGISTRY_SERVER }}
-          repository: ${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}
+          registry: quay.io
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-          tags: ${{ env.TAGS }}
+
+      - name: Debezium postgres
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: postgres
+          file: postgres/Dockerfile
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}:${{ env.TAGS }}
+          secrets: |
+            "registry=${{ secrets.REGISTRY_SERVER }}"
+            "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}"
+            "username=${{ secrets.REGISTRY_USERNAME }}"
+            "password=${{ secrets.REGISTRY_PASSWORD }}"
+
   build-mongodb:
     env:
       image_name: cos-connector-debezium-mongodb
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+
+      - name: Login to Quay
+        uses: docker/login-action@v1
         with:
-          path: mongodb
-      - name: Debezium mongodb
-        uses: docker/build-push-action@v1
-        with:
-          registry: ${{ secrets.REGISTRY_SERVER }}
-          repository: ${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}
+          registry: quay.io
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-          tags: ${{ env.TAGS }}
+
+      - name: Debezium mongodb
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: mongodb
+          file: mongodb/Dockerfile
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}:${{ env.TAGS }}
+          secrets: |
+            "registry=${{ secrets.REGISTRY_SERVER }}"
+            "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}"
+            "username=${{ secrets.REGISTRY_USERNAME }}"
+            "password=${{ secrets.REGISTRY_PASSWORD }}"
+
   build-mysql:
     env:
       image_name: cos-connector-debezium-mysql
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: actions/checkout@master
+
+      - name: Login to Quay
+        uses: docker/login-action@v1
         with:
-          path: mongodb      
-      - name: Debezium mysql
-        uses: docker/build-push-action@v1
-        with:
-          registry: ${{ secrets.REGISTRY_SERVER }}
-          repository: ${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}
+          registry: quay.io
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-          tags: ${{ env.TAGS }}
+
+      - name: Debezium mysql
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: mysql
+          file: mysql/Dockerfile
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}:${{ env.TAGS }}
+          secrets: |
+            "registry=${{ secrets.REGISTRY_SERVER }}"
+            "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.image_name }}"
+            "username=${{ secrets.REGISTRY_USERNAME }}"
+            "password=${{ secrets.REGISTRY_PASSWORD }}"
