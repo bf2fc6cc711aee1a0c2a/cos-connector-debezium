@@ -1,0 +1,79 @@
+name: Build and push Debezium images to quay.io
+on:
+  workflow_call:
+    inputs:
+      DEBEZIUM_CONNECTOR:
+        required: true
+        type: string
+      DEBEZIUM_VERSION:
+        required: true
+        type: string
+      DOCKERFILE_FILENAME:
+        required: false
+        type: string
+        default: "Dockerfile"
+    secrets:
+      REGISTRY_SERVER:
+        required: true
+      REGISTRY_NAMESPACE:
+        required: true
+      REGISTRY_USERNAME:
+        required: true
+      REGISTRY_PASSWORD:
+        required: true
+env:
+  STRIMZI_VERSION: 0.28.0
+  KAFKA_VERSION: 3.1.0
+
+jobs:
+  build-connector-image:
+    name: Build and deploy Debezium container image for ${{ inputs.DEBEZIUM_CONNECTOR }} ${{ inputs.DEBEZIUM_VERSION }}
+    runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: cos-connector-debezium-${{ inputs.DEBEZIUM_CONNECTOR }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to quay.io
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build and deploy tag with Strimzi ${{ env.STRIMZI_VERSION }}, Kafka ${{ env.KAFKA_VERSION }}
+        if: ${{ github.ref_type == 'tag' }}
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          build-args: |
+            DEBEZIUM_CONNECTOR=${{ inputs.DEBEZIUM_CONNECTOR }}
+            DEBEZIUM_VERSION=${{ inputs.DEBEZIUM_VERSION }}
+            STRIMZI_VERSION=${{ env.STRIMZI_VERSION }}
+            KAFKA_VERSION=${{ env.KAFKA_VERSION }}
+          context: .
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ inputs.DEBEZIUM_VERSION }},${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
+          secrets: |
+            "registry=${{ secrets.REGISTRY_SERVER }}"
+            "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}"
+            "username=${{ secrets.REGISTRY_USERNAME }}"
+            "password=${{ secrets.REGISTRY_PASSWORD }}"
+
+      - name: Build and deploy non-tag with Strimzi ${{ env.STRIMZI_VERSION }}, Kafka ${{ env.KAFKA_VERSION }}
+        if: ${{ github.ref_type != 'tag' }}
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          build-args: |
+            DEBEZIUM_CONNECTOR=${{ inputs.DEBEZIUM_CONNECTOR }}
+            DEBEZIUM_VERSION=${{ inputs.DEBEZIUM_VERSION }}
+            STRIMZI_VERSION=${{ env.STRIMZI_VERSION }}
+            KAFKA_VERSION=${{ env.KAFKA_VERSION }}
+          context: .
+          file: ${{ inputs.DOCKERFILE_FILENAME }}
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ inputs.DEBEZIUM_VERSION }}
+          secrets: |
+            "registry=${{ secrets.REGISTRY_SERVER }}"
+            "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}"
+            "username=${{ secrets.REGISTRY_USERNAME }}"
+            "password=${{ secrets.REGISTRY_PASSWORD }}"

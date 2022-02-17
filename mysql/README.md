@@ -1,1 +1,0 @@
-# cos-connector-debezium-mysql
