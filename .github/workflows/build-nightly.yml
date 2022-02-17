@@ -1,0 +1,58 @@
+name: Build and push Debezium nightly images to quay.io
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-nightly.yml'
+      - '.github/workflows/build.yml'
+      - 'Dockerfile'
+      - 'Dockerfile.*'
+
+env:
+  DEBEZIUM_VERSION: nightly
+
+jobs:
+  build-tags-postgres:
+    uses: ./.github/workflows/build.yml
+    with:
+      DEBEZIUM_CONNECTOR: postgres
+      DEBEZIUM_VERSION: ${{ env.DEBEZIUM_VERSION }}
+    secrets:
+      REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
+      REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+  build-tags-mongodb:
+    uses: ./.github/workflows/build.yml
+    with:
+      DEBEZIUM_CONNECTOR: mongodb
+      DEBEZIUM_VERSION: ${{ env.DEBEZIUM_VERSION }}
+    secrets:
+      REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
+      REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+  build-tags-mysql:
+    uses: ./.github/workflows/build.yml
+    with:
+      DEBEZIUM_CONNECTOR: mysql
+      DEBEZIUM_VERSION: ${{ env.DEBEZIUM_VERSION }}
+    secrets:
+      REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
+      REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+  build-tags-sqlserver:
+    uses: ./.github/workflows/build.yml
+    with:
+      DEBEZIUM_CONNECTOR: sqlserver
+      DEBEZIUM_VERSION: ${{ env.DEBEZIUM_VERSION }}
+    secrets:
+      REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
+      REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}

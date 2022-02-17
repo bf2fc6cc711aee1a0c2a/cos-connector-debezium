@@ -1,0 +1,85 @@
+name: Test Debezium nightly images build
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/*.yml'
+      - 'Dockerfile'
+      - 'Dockerfile.*'
+
+env:
+  DEBEZIUM_VERSION: nightly
+  STRIMZI_VERSION: latest
+  KAFKA_VERSION: 3.1.0
+
+jobs:
+  test-postgres:
+    name: Test Postgres Debezium container image build ${{ env.DEBEZIUM_VERSION }} Strimzi ${{ env.STRIMZI_VERSION }} Kafka ${{ env.KAFKA_VERSION }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          build-args: |
+            DEBEZIUM_CONNECTOR=postgres
+            DEBEZIUM_VERSION=${{ env.DEBEZIUM_VERSION }}
+            STRIMZI_VERSION=${{ env.STRIMZI_VERSION }}
+            KAFKA_VERSION=${{ env.KAFKA_VERSION }}
+          context: .
+          file: Dockerfile
+
+  test-mongodb:
+    name: Test Mongo DB Debezium container image build ${{ inputs.DEBEZIUM_VERSION }} Strimzi ${{ env.STRIMZI_VERSION }} Kafka ${{ env.KAFKA_VERSION }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          build-args: |
+            DEBEZIUM_CONNECTOR=mongodb
+            DEBEZIUM_VERSION=${{ env.DEBEZIUM_VERSION }}
+            STRIMZI_VERSION=${{ env.STRIMZI_VERSION }}
+            KAFKA_VERSION=${{ env.KAFKA_VERSION }}
+          context: .
+          file: Dockerfile
+
+  test-mysql:
+    name: Test MySQL Debezium container image build ${{ inputs.DEBEZIUM_VERSION }} Strimzi ${{ env.STRIMZI_VERSION }} Kafka ${{ env.KAFKA_VERSION }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          build-args: |
+            DEBEZIUM_CONNECTOR=mysql
+            DEBEZIUM_VERSION=${{ env.DEBEZIUM_VERSION }}
+            STRIMZI_VERSION=${{ env.STRIMZI_VERSION }}
+            KAFKA_VERSION=${{ env.KAFKA_VERSION }}
+          context: .
+          file: Dockerfile
+
+
+  test-sqlserver:
+    name: Test MySQL Debezium container image build ${{ inputs.DEBEZIUM_VERSION }} Strimzi ${{ env.STRIMZI_VERSION }} Kafka ${{ env.KAFKA_VERSION }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          build-args: |
+            DEBEZIUM_CONNECTOR=sqlserver
+            DEBEZIUM_VERSION=${{ env.DEBEZIUM_VERSION }}
+            STRIMZI_VERSION=${{ env.STRIMZI_VERSION }}
+            KAFKA_VERSION=${{ env.KAFKA_VERSION }}
+          context: .
+          file: Dockerfile
