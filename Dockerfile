@@ -10,6 +10,7 @@ ARG DEBEZIUM_VERSION
 ARG STRIMZI_VERSION
 ARG KAFKA_VERSION
 
+COPY --from=upstream /kafka/external_libs/apicurio/ /opt/kafka/plugins/apicurio/
 COPY --from=upstream /kafka/connect/debezium-connector-${DEBEZIUM_CONNECTOR}/ /opt/kafka/plugins/debezium-connector-${DEBEZIUM_CONNECTOR}/
 
 USER 1001
