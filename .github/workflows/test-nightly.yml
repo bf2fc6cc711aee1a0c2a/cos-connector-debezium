@@ -12,7 +12,7 @@ on:
 env:
   DEBEZIUM_VERSION: nightly
   STRIMZI_VERSION: latest
-  KAFKA_VERSION: 3.1.0
+  KAFKA_VERSION: 3.1.1
 
 jobs:
   test-postgres:
