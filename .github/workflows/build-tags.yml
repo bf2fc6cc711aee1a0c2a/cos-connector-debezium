@@ -9,7 +9,8 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       DEBEZIUM_CONNECTOR: postgres
-      DEBEZIUM_VERSION: ${{ github.ref_name }}
+      DEBEZIUM_VERSION_UPSTREAM: ${{ github.ref_name }}.Final
+      DEBEZIUM_VERSION_DOWNSTREAM: ${{ github.ref_name }}.ER1
     secrets:
       REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
       REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
@@ -20,7 +21,8 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       DEBEZIUM_CONNECTOR: mongodb
-      DEBEZIUM_VERSION: ${{ github.ref_name }}
+      DEBEZIUM_VERSION_UPSTREAM: ${{ github.ref_name }}.Final
+      DEBEZIUM_VERSION_DOWNSTREAM: ${{ github.ref_name }}.ER1
     secrets:
       REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
       REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
@@ -31,7 +33,8 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       DEBEZIUM_CONNECTOR: mysql
-      DEBEZIUM_VERSION: ${{ github.ref_name }}
+      DEBEZIUM_VERSION_UPSTREAM: ${{ github.ref_name }}.Final
+      DEBEZIUM_VERSION_DOWNSTREAM: ${{ github.ref_name }}.ER1
     secrets:
       REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
       REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
@@ -42,7 +45,8 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       DEBEZIUM_CONNECTOR: sqlserver
-      DEBEZIUM_VERSION: ${{ github.ref_name }}
+      DEBEZIUM_VERSION_UPSTREAM: ${{ github.ref_name }}.Final
+      DEBEZIUM_VERSION_DOWNSTREAM: ${{ github.ref_name }}.ER1
     secrets:
       REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
       REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}

@@ -14,8 +14,8 @@ Strimzi and Strimzi's Kafka versions are set by
 `STRIMZI_VERSION` and `KAFKA_VERSION` env vars in build.yml:
 ```
 env:
-  STRIMZI_VERSION: 0.28.0
-  KAFKA_VERSION: 3.1.0
+  STRIMZI_VERSION: 0.32.0
+  KAFKA_VERSION: 3.3.1
 ```
 
 Nightly builds are triggered by changes in the main branch

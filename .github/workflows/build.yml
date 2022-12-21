@@ -5,7 +5,10 @@ on:
       DEBEZIUM_CONNECTOR:
         required: true
         type: string
-      DEBEZIUM_VERSION:
+      DEBEZIUM_VERSION_UPSTREAM:
+        required: true
+        type: string
+      DEBEZIUM_VERSION_DOWNSTREAM:
         required: true
         type: string
       DOCKERFILE_FILENAME:
@@ -22,12 +25,12 @@ on:
       REGISTRY_PASSWORD:
         required: true
 env:
-  STRIMZI_VERSION: 0.31.1
-  KAFKA_VERSION: 3.1.2
+  STRIMZI_VERSION: 0.32.0
+  KAFKA_VERSION: 3.3.1
 
 jobs:
   build-connector-image:
-    name: Build and deploy Debezium container image for ${{ inputs.DEBEZIUM_CONNECTOR }} ${{ inputs.DEBEZIUM_VERSION }}
+    name: Build and deploy Debezium container image for ${{ inputs.DEBEZIUM_CONNECTOR }} ${{ inputs.DEBEZIUM_VERSION_UPSTREAM }} ${{ inputs.DEBEZIUM_VERSION_DOWNSTREAM }}
     runs-on: ubuntu-20.04
     env:
       IMAGE_NAME: cos-connector-debezium-${{ inputs.DEBEZIUM_CONNECTOR }}
@@ -48,11 +51,12 @@ jobs:
           push: true
           build-args: |
             DEBEZIUM_CONNECTOR=${{ inputs.DEBEZIUM_CONNECTOR }}
-            DEBEZIUM_VERSION=${{ inputs.DEBEZIUM_VERSION }}
+            DEBEZIUM_VERSION_UPSTREAM=${{ inputs.DEBEZIUM_VERSION_UPSTREAM }}
+            DEBEZIUM_VERSION_DOWNSTREAM=${{ inputs.DEBEZIUM_VERSION_DOWNSTREAM }}
             STRIMZI_VERSION=${{ env.STRIMZI_VERSION }}
             KAFKA_VERSION=${{ env.KAFKA_VERSION }}
           context: .
-          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ inputs.DEBEZIUM_VERSION }},${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ inputs.DEBEZIUM_VERSION_DOWNSTREAM }},${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
           secrets: |
             "registry=${{ secrets.REGISTRY_SERVER }}"
             "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}"
@@ -66,12 +70,13 @@ jobs:
           push: true
           build-args: |
             DEBEZIUM_CONNECTOR=${{ inputs.DEBEZIUM_CONNECTOR }}
-            DEBEZIUM_VERSION=${{ inputs.DEBEZIUM_VERSION }}
+            DEBEZIUM_VERSION_UPSTREAM=${{ inputs.DEBEZIUM_VERSION_UPSTREAM }}
+            DEBEZIUM_VERSION_DOWNSTREAM=${{ inputs.DEBEZIUM_VERSION_DOWNSTREAM }}
             STRIMZI_VERSION=${{ env.STRIMZI_VERSION }}
             KAFKA_VERSION=${{ env.KAFKA_VERSION }}
           context: .
           file: ${{ inputs.DOCKERFILE_FILENAME }}
-          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ inputs.DEBEZIUM_VERSION }}
+          tags: ${{ secrets.REGISTRY_SERVER }}/${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ inputs.DEBEZIUM_VERSION_DOWNSTREAM }}
           secrets: |
             "registry=${{ secrets.REGISTRY_SERVER }}"
             "repository=${{ secrets.REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}"

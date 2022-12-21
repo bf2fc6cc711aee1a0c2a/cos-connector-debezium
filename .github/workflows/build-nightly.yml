@@ -17,7 +17,8 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       DEBEZIUM_CONNECTOR: postgres
-      DEBEZIUM_VERSION: nightly
+      DEBEZIUM_VERSION_UPSTREAM: nightly
+      DEBEZIUM_VERSION_DOWNSTREAM: nightly
     secrets:
       REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
       REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
@@ -28,7 +29,8 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       DEBEZIUM_CONNECTOR: mongodb
-      DEBEZIUM_VERSION: nightly
+      DEBEZIUM_VERSION_UPSTREAM: nightly
+      DEBEZIUM_VERSION_DOWNSTREAM: nightly
     secrets:
       REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
       REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
@@ -39,7 +41,8 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       DEBEZIUM_CONNECTOR: mysql
-      DEBEZIUM_VERSION: nightly
+      DEBEZIUM_VERSION_UPSTREAM: nightly
+      DEBEZIUM_VERSION_DOWNSTREAM: nightly
     secrets:
       REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
       REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
@@ -50,7 +53,8 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       DEBEZIUM_CONNECTOR: sqlserver
-      DEBEZIUM_VERSION: nightly
+      DEBEZIUM_VERSION_UPSTREAM: nightly
+      DEBEZIUM_VERSION_DOWNSTREAM: nightly
     secrets:
       REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
       REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
