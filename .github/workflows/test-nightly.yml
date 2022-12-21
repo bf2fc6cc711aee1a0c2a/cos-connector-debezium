@@ -12,7 +12,7 @@ on:
 env:
   DEBEZIUM_VERSION: nightly
   STRIMZI_VERSION: latest
-  KAFKA_VERSION: 3.2.3
+  KAFKA_VERSION: 3.3.1
 
 jobs:
   test-postgres:
@@ -20,6 +20,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Login to quay.io
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Test Postgres Debezium container image build ${{ env.DEBEZIUM_VERSION }} using Strimzi ${{ env.STRIMZI_VERSION }}, Kafka ${{ env.KAFKA_VERSION }}
         uses: docker/build-push-action@v2
         with:
@@ -37,6 +43,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Login to quay.io
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Test Mongo DB Debezium container image build ${{ env.DEBEZIUM_VERSION }} using Strimzi ${{ env.STRIMZI_VERSION }}, Kafka ${{ env.KAFKA_VERSION }}
         uses: docker/build-push-action@v2
         with:
@@ -54,6 +66,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Login to quay.io
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Test MySQL Debezium container image build ${{ env.DEBEZIUM_VERSION }} using Strimzi ${{ env.STRIMZI_VERSION }}, Kafka ${{ env.KAFKA_VERSION }}
         uses: docker/build-push-action@v2
         with:
@@ -66,12 +84,17 @@ jobs:
           context: .
           file: Dockerfile
 
-
   test-sqlserver:
     name: Test SQL Server Debezium container image build
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Login to quay.io
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Test SQL Server Debezium container image build ${{ env.DEBEZIUM_VERSION }} using Strimzi ${{ env.STRIMZI_VERSION }}, Kafka ${{ env.KAFKA_VERSION }}
         uses: docker/build-push-action@v2
         with:
